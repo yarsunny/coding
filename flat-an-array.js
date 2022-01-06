@@ -1,17 +1,10 @@
-function flat(arr, depth = 1) {
-	function flatByOne(arr2) {
-		return [].concat(...arr2);
-	}
+var a = [1, [2, [3, [4]], 5], 6, [7,8, [9, 10]]];
 
-	if (arr.some(Array.isArray)) {
-		if (depth === 1) {
-			return flatByOne(arr);
-		} else {
-			return flat(flatByOne(arr), depth -1);
-		}
-	} else {
-		return arr;
-	}
+function flattenArray(arr) {
+  while(arr.some(Array.isArray)) {           
+    arr = [].concat(...arr);
+  }
+  return arr;
 }
 
-console.log(flat([1,[2, [3]]], 2))
+console.log(flattenArray(a));
