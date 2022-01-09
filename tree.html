@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+  
+  <style>
+    ul {
+      list-style-type: none;
+    }
+
+    .caret {
+      cursor: pointer
+    }
+    .caret:before {
+      content: "\25BD";
+      color: red;
+      display: inline-block;
+      width: 20px;
+      margin-left: -24px;  
+    }
+
+    .caret-closed:before {
+      transform: rotate(-90deg);
+    }
+
+    .nest.close {
+      display: none;
+    }
+    
+  </style>
+  
+</head>
+<body>
+  
+  <input id="searchBox" type="text" />
+
+  <ul id="tree">
+    <li><span class="caret caret-closed"></span>India
+      <ul class="nest close">
+        <li>Delhi</li>
+        <li><span class="caret caret-closed"></span>
+          Hyderabad
+          <ul class="nest close">
+            <li>achampet</li>
+            <li>dindi</li>
+            <li>nagarkurnool</li>
+          </ul>
+        </li>
+        <li>
+          <span class="caret caret-closed"></span>
+          Bangalore
+          <ul class="nest close">
+            <li>Sarjapur</li>
+            <li>Bellandur</li>
+            <li>kormangala</li>
+            <li>maratahalli</li>
+          </ul>
+        </li>
+      </ul>      
+    </li>
+    <li><span class="caret caret-closed"></span>USA
+      <ul class="nest close">
+        <li>Texas</li>
+        <li>California</li>
+        <li>Detroit</li>
+      </ul>
+    </li>
+    <li><span class="caret caret-closed"></span>France
+      <ul class="nest close">
+        <li>Paris</li>
+        <li>Champange</li>
+      </ul>
+    </li>
+    <li><span class="caret caret-closed"></span>Australlia
+      <ul class="nest close">
+        <li>Sydney</li>
+        <li>Melbourne</li>        
+      </ul>
+    </li>
+  </ul>
+  
+ <script>    
+    document.querySelectorAll(".caret").forEach(el => {
+      el.addEventListener('click', function(e){
+        this.classList.toggle('caret-closed');
+        this.parentElement.querySelector(".nest").classList.toggle('close');
+      })
+    })
+
+    document.querySelector("#searchBox").addEventListener('keyup', debounce(function(e) {  
+      const searchQuery = e.target.value;   
+      // Get all li's
+      let i = 0;
+      document.querySelectorAll('#tree li').forEach(el => {    
+        const textInLi = el.textContent;
+        if (textInLi.includes(searchQuery)) {      
+           if(el.children && el.children[0] && el.children[0].classList) {
+              el.children[0].classList.remove('caret-closed');
+              el.querySelector(".nest").classList.remove('close')
+           }        
+
+        } else {
+          if(el.children && el.children[0] && el.children[0].classList?.length > 0) {
+             if (!el.children[0].classList.contains('caret-closed')) {
+               el.children[0].classList.add('caret-closed');
+             }          
+
+             if (!el.querySelector(".nest").classList.contains('close')) {
+               el.querySelector(".nest").classList.add('close');
+             }
+           }
+        }         
+      })
+
+    },300));
+
+    function debounce(fn, time) {
+      let timeout;
+      return function(...args) {
+        const context = this;
+        if (timeout) {
+          clearTimeout(timeout);      
+        }
+
+        timeout = setTimeout(() => {
+          fn.apply(context, args); 
+        }, time);
+      }
+    }
+  </script>
+  
+</body>
+</html>
